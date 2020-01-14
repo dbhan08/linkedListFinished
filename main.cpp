@@ -5,24 +5,43 @@
 using namespace std;
 
 Node* head = NULL;
-void add(char* first, char* last, int id, float gpa) {
+void add(Node* current, char* first, char* last, int id, float gpa) {
     Student* newStudent = new Student(first, last, id, gpa);
-    Node* current = head;
+     
     if(current == NULL) {
         head = new Node(newStudent);
         head->setStudent(newStudent);
         
-    } else {
+    } else if(current ->getStudent() ->getId() <  id) {
+	Node* nodeStudent = new Node(newStudent);
         while(current->getNext() != NULL) {
+	if(current->getNext()->getStudent()->getId() >  id) {
+		nodeStudent->setNext(current->getNext());
+		nodeStudent->getNext()->setStudent(current->getNext()->getStudent());
+		break;
+
+	}
             current = current->getNext();
-            
-        }
-        current->setNext(new Node(newStudent));
-        current->getNext()->setStudent(newStudent);
-    }
-    
-    
+	}
+        current->setNext(nodeStudent);
+	current ->getNext() -> setStudent(newStudent);
+	
+        
+        
+    } else {
+
+	add(current->getNext(), first, last, id, gpa);
+
+} 
+
+
+
 }
+
+    
+    
+
+
 
 
 void print(Node* next) {
@@ -68,7 +87,8 @@ void print(Node* next) {
                 cin >> gpa;
                 cin.clear();
                 cin.ignore();
-                add(first,last,id,gpa);
+		Node* current = head;
+                add(current,first,last,id,gpa);
                 
             } else if(strcmp(inp,"print") == 0) {
                 print(head);
