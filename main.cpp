@@ -12,14 +12,32 @@ void add(Node* current, char* first, char* last, int id, float gpa) {
         head = new Node(newStudent);
         head->setStudent(newStudent);
         
-    } else if(current ->getStudent() ->getId() <  id) {
+    } else if(current == head && current->getStudent()->getId() >id) {
+	Node* nodeStudent = new Node(newStudent);
+		nodeStudent->setNext(current);
+		nodeStudent->getNext()->setStudent(current->getStudent());
+		head = nodeStudent;
+		head->setStudent(newStudent);
+		
+
+	
+	
+
+	
+
+	}  else if(current ->getStudent() ->getId() <  id) {
 	Node* nodeStudent = new Node(newStudent);
         while(current->getNext() != NULL) {
 	if(current->getNext()->getStudent()->getId() >  id) {
+		
+		
+
 		nodeStudent->setNext(current->getNext());
 		nodeStudent->getNext()->setStudent(current->getNext()->getStudent());
+		
 		break;
-
+	 
+	
 	}
             current = current->getNext();
 	}
@@ -28,7 +46,7 @@ void add(Node* current, char* first, char* last, int id, float gpa) {
 	
         
         
-    } else {
+    }  else {
 
 	add(current->getNext(), first, last, id, gpa);
 
@@ -37,6 +55,32 @@ void add(Node* current, char* first, char* last, int id, float gpa) {
 
 
 }
+
+void remove(Node* current, int id) {
+
+if(current == NULL) {
+return;
+
+}
+if(current->getNext()->getStudent()->getId() == id) {
+Node* node = current->getNext()->getNext();
+current->setNext(node);
+current->getNext()->setStudent(node->getStudent());
+
+delete current->getNext();
+
+
+} else {
+
+remove(current->getNext(),id);
+
+
+
+
+}
+
+}
+
 
     
     
@@ -96,7 +140,16 @@ void print(Node* next) {
             }else if(strcmp(inp, "quit") == 0) {
                 
                 running = false;
-            } else {
+	    } else if(strcmp(inp,"avg") == 0) {
+
+
+		} else if(strcmp(inp,"delete") == 0) { 
+			cout << "Enter the id of the student you would like to delete" << endl;
+			cin >> id;
+			Node* current = head;
+			remove(current, id);
+
+		}    else {
                 
                 cout << "Enter a valid option" << endl;
             }
