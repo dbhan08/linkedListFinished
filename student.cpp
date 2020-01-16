@@ -20,8 +20,8 @@ Student::Student(char* first, char* last, int newId, float newgpa) {
 
 
 Student::~Student() {
-    delete &firstName;
-    delete &lastName;
+    delete[] &firstName;
+    delete[] &lastName;
     
 }
 

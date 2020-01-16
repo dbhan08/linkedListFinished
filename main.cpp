@@ -2,6 +2,7 @@
 #include <cstring>
 #include "Node.h"
 #include "student.h"
+#include <iomanip>
 using namespace std;
 
 Node* head = NULL;
@@ -56,25 +57,74 @@ void add(Node* current, char* first, char* last, int id, float gpa) {
 
 }
 
-void remove(Node* current, int id) {
 
+
+
+float getAverage(Node* current) {
+float total = 0;
+int count = 0;
+
+if(current == head) {
+total+= current->getStudent()->getGpa();
+count++;
+}
+
+while(current->getNext()!=NULL) {
+total+=current->getStudent()->getGpa();
+count++;
+current = current->getNext();
+
+}
+return total;
+
+}
+
+void remove(Node* current,Node* prev, int id) {
 if(current == NULL) {
 return;
 
 }
-if(current->getNext()->getStudent()->getId() == id) {
-Node* node = current->getNext()->getNext();
-current->setNext(node);
-current->getNext()->setStudent(node->getStudent());
+if(current->getStudent()->getId() == id) {
+if(prev == NULL) {
+if(current->getNext() != NULL) {
+cout << "n" << endl;
 
-delete current->getNext();
+head = current->getNext();
+current -> ~Node();
+} else {
+
+current -> ~Node();
+head = NULL;
+}
+return;
+
+}
+
+
+else if(current->getNext() == NULL) {
+cout << "a";
+Node* temp = new Node(current->getStudent());
+temp = current; 
+prev->setNext(NULL);
+current -> ~Node();
+return;
+} else {
+cout << "c";
+Node* temp = new Node(current->getStudent());
+temp = current;
+prev->setNext(current->getNext());
+current -> ~Node();
+return;
+}
+
+
+
 
 
 } else {
-
-remove(current->getNext(),id);
-
-
+prev= current;
+current = current->getNext();
+remove(current,prev,id);
 
 
 }
@@ -94,7 +144,7 @@ void print(Node* next) {
     }
     if(next != NULL) {
         cout << next->getStudent()->getFirst() << " " << next->getStudent()->getLast() << "\t"<< next ->getStudent()->getId() << "\t" <<
-        next ->getStudent()-> getGpa() << endl;
+       fixed << setprecision(2)<< next ->getStudent()-> getGpa() << endl;
         print(next->getNext());
         
     }
@@ -141,13 +191,13 @@ void print(Node* next) {
                 
                 running = false;
 	    } else if(strcmp(inp,"avg") == 0) {
-
+		cout << "The average gpa is: " << getAverage(head) << endl;
 
 		} else if(strcmp(inp,"delete") == 0) { 
 			cout << "Enter the id of the student you would like to delete" << endl;
 			cin >> id;
 			Node* current = head;
-			remove(current, id);
+			remove(current,NULL ,id);
 
 		}    else {
                 
